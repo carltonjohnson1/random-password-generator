@@ -7,7 +7,7 @@
 
 body {
     font-family: 'Trebuchet MS', sans-serif;
-    background-color: #f1f1f1;
+    background: linear-gradient(white, blue);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -24,6 +24,7 @@ h1 {
     border-radius: 12px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
     text-align: center;
+    margin: 0px 15px;
 }
 
 .password-box {
@@ -54,7 +55,6 @@ button:hover {
 
 .copied {
     visibility: hidden;
-    min-width: 160px;
     background-color: #333;
     color: #fff;
     text-align: center;
