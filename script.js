@@ -17,14 +17,46 @@ generateBtn.onclick = () => {
     passwordField.value = generatePassword();
 };
 
-copyBtn.onclick = () => {
-    navigator.clipboard.writeText(passwordField.value);
-    copyBtn.textContent = "Yes";
-    setTimeout(() => copyBtn.textContent = "", 1000);
+async function copyToClipboard() {
+    const textToCopy = passwordField.value || "";
+    if (!textToCopy) return false;
+
+    // Try modern clipboard API first
+    try {
+        await navigator.clipboard.writeText(textToCopy);
+        return true;
+    } catch (err) {
+        // Fallback for non-secure contexts or older browsers
+        try {
+            passwordField.select();
+            passwordField.setSelectionRange(0, textToCopy.length);
+            const success = document.execCommand("copy");
+            window.getSelection && window.getSelection().removeAllRanges();
+            return success;
+        } catch (_) {
+            return false;
+        }
+    }
+}
+
+function showCopiedUI(success) {
+    if (!success) return;
+    const originalText = copyBtn.textContent;
+    copyBtn.textContent = "Copied";
     copied.classList.add("show");
-    copyBtn.textContent = "Yes";
     setTimeout(() => {
         copied.classList.remove("show");
-        copyBtn.textContent = "Copied";
-    }, 1500);
+        copyBtn.textContent = originalText;
+    }, 1200);
+}
+
+copyBtn.onclick = async () => {
+    const success = await copyToClipboard();
+    showCopiedUI(success);
+};
+
+// Also allow clicking the toast itself to copy, per the requested id
+copied.onclick = async () => {
+    const success = await copyToClipboard();
+    showCopiedUI(success);
 };
